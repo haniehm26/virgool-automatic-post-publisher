@@ -90,3 +90,25 @@ class VirgoolAPI:
         url = "https://virgool.io/api/v1.4/editor/publish"
         response = session.post(url, headers=session.headers, cookies=session.cookies, data=data)
         return response
+
+
+def send_telegram_message(proxy: dict, bot_token: str, chat_id: str, text: str):
+    session = Session()
+    session.headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0",
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+    }
+    session.proxies = proxy
+    url = (
+        "https://api.telegram.org/bot"
+        + bot_token
+        + "/sendMessage?chat_id="
+        + chat_id
+        + "&text="
+        + text
+    )
+    response = session.get(
+        url, headers=session.headers, cookies=session.cookies, proxies=session.proxies
+    )
+    return response
