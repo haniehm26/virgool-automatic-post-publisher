@@ -52,3 +52,22 @@ class VirgoolAPI:
         url = "https://virgool.io/api/v1.4/post/" + post_hash
         response = session.get(url, headers=session.headers, cookies=session.cookies)
         return response
+
+    # OK BUT CAN NOT CHANGE TAGS YET
+    def edit_post(self, pyload: dict, body: str, description: str = None, tags: list = None):
+        data = {
+            "post_id": pyload["id"],
+            "hash": pyload["hash"],
+            "title": pyload["title"],
+            "primary_img": pyload["primary_img"],
+            "customized_slug": "",
+            "words_count": 0,
+            "body": body,
+            # "tag": pyload["tags"] if tags is None else tags,
+            "tag": "" if tags is None else tags,
+            "og_description": pyload["description"] if description is None else description,
+        }
+        session = self.session
+        url = "https://virgool.io/api/v1.4/editor/draft"
+        response = session.post(url, headers=session.headers, cookies=session.cookies, data=data)
+        return response, data
