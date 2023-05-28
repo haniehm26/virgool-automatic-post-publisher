@@ -71,3 +71,22 @@ class VirgoolAPI:
         url = "https://virgool.io/api/v1.4/editor/draft"
         response = session.post(url, headers=session.headers, cookies=session.cookies, data=data)
         return response, data
+
+    # OK
+    def publish_post(self, pyload: dict):
+        data = {
+            "post_id": pyload["post_id"],
+            "hash": pyload["hash"],
+            "title": pyload["title"],
+            "body": pyload["body"],
+            "customized_slug": pyload["customized_slug"],
+            "tag": pyload["tag"],
+            "words_count": pyload["words_count"],
+            "og_description": pyload["og_description"],
+            "primary_img": pyload["primary_img"],
+            "publication_hash": None,
+        }
+        session = self.session
+        url = "https://virgool.io/api/v1.4/editor/publish"
+        response = session.post(url, headers=session.headers, cookies=session.cookies, data=data)
+        return response
