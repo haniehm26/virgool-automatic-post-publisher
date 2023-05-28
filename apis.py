@@ -9,3 +9,11 @@ class VirgoolAPI:
             "Accept": "*/*",
             "Accept-Encoding": "gzip, deflate, br",
         }
+
+    # OK
+    def login(self, username: str, password: str):
+        session = self.session
+        url = "https://virgool.io/api/v1.4/auth/login"
+        payload = {"username": username, "password": password}
+        response = session.post(url, data=payload, headers=session.headers)
+        return response
