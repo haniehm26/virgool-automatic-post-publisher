@@ -12,3 +12,15 @@ def edit_virgool_post_body(draft_body: str, short_url: str, is_draft: bool):
     edited_paragraph = f"{start_paragraph}{link}{paragraph_text}{'</a></p>'}"
     edited_body = draft_body.replace(paragraph_tag, edited_paragraph)
     return edited_body
+
+
+def generate_telegram_channel_text(session: str, subject: str, short_url: str, tags: list):
+    hashtag = "%23"
+    text = session + "دوره آمار و احتمال با موضوع"
+    text += subject + " در ویرگول منتشر شد:\n"
+    text += short_url + "\n\n"
+    for tag in tags:
+        text += hashtag + tag + "\n"
+    text += "\n\n"
+    text += "📚 @honio_notes"
+    return text
