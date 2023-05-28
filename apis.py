@@ -31,3 +31,10 @@ class VirgoolAPI:
         url = "https://virgool.io/api/v1.4/posts/published"
         response = session.get(url, headers=session.headers, cookies=session.cookies)
         return response
+
+    # OK
+    def fetch_draft_editor_by_hash(self, post_hash: str):
+        session = self.session
+        url = "https://virgool.io/api/v1.4/editor/fetch/d/" + post_hash
+        response = session.get(url, headers=session.headers, cookies=session.cookies)
+        return response
