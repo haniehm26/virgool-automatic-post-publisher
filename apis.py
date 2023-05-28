@@ -17,3 +17,10 @@ class VirgoolAPI:
         payload = {"username": username, "password": password}
         response = session.post(url, data=payload, headers=session.headers)
         return response
+
+   # OK
+    def get_drafts(self):
+        session = self.session
+        url = "https://virgool.io/api/v1.4/posts/drafts"
+        response = session.get(url, headers=session.headers, cookies=session.cookies)
+        return response
