@@ -1,14 +1,31 @@
+import time
+
 from requests import Session
+from selenium import webdriver
 
 
 class VirgoolAPI:
     def __init__(self) -> None:
+        arcsjs_cookie = self.get_arcsjs_cookie()
         self.session = Session()
         self.session.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0",
             "Accept": "*/*",
             "Accept-Encoding": "gzip, deflate, br",
+            "Cookie": arcsjs_cookie,
         }
+
+    def get_arcsjs_cookie(self) -> str:
+        options = webdriver.ChromeOptions()
+        options.add_argument("headless")
+        driver = webdriver.Chrome(options=options)
+        driver.get("https://virgool.io/")
+        time.sleep(30)
+        for cookies in driver.get_cookies():
+            if cookies["name"] == "__arcsjs":
+                arcsjs_cookie = cookies["name"] + "=" + cookies["value"]
+                driver.quit()
+                return arcsjs_cookie
 
     # OK
     def login(self, username: str, password: str):
