@@ -1,7 +1,6 @@
-import time
-
 from requests import Session
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class VirgoolAPI:
@@ -17,15 +16,14 @@ class VirgoolAPI:
 
     def get_arcsjs_cookie(self) -> str:
         options = webdriver.ChromeOptions()
-        options.add_argument("headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--headless")
         driver = webdriver.Chrome(options=options)
         driver.get("https://virgool.io/")
-        time.sleep(30)
-        for cookies in driver.get_cookies():
-            if cookies["name"] == "__arcsjs":
-                arcsjs_cookie = cookies["name"] + "=" + cookies["value"]
-                driver.quit()
-                return arcsjs_cookie
+        cookie = WebDriverWait(driver, timeout=60).until(lambda d: d.get_cookie("__arcsjs"))
+        arcsjs_cookie = cookie["name"] + "=" + cookie["value"]
+        driver.quit()
+        return arcsjs_cookie
 
     # OK
     def login(self, username: str, password: str):
