@@ -1,27 +1,28 @@
 from requests import Session
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 class VirgoolAPI:
     def __init__(self) -> None:
-        arcsjs_cookie = self.get_arcsjs_cookie()
         self.session = Session()
+        self.arcsjs_cookie = self.get_arcsjs_cookie()
         self.session.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0",
             "Accept": "*/*",
             "Accept-Encoding": "gzip, deflate, br",
-            "Cookie": arcsjs_cookie,
+            "Cookie": self.arcsjs_cookie["name"] + "=" + self.arcsjs_cookie["value"],
         }
 
-    def get_arcsjs_cookie(self) -> str:
+    def get_arcsjs_cookie(self) -> dict:
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--headless")
-        driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         driver.get("https://virgool.io/")
-        cookie = WebDriverWait(driver, timeout=60).until(lambda d: d.get_cookie("__arcsjs"))
-        arcsjs_cookie = cookie["name"] + "=" + cookie["value"]
+        cookie = WebDriverWait(driver, timeout=120).until(lambda d: d.get_cookie("__arcsjs"))
+        arcsjs_cookie = {"name": cookie["name"], "value": cookie["value"]}
         driver.quit()
         return arcsjs_cookie
 
@@ -36,6 +37,8 @@ class VirgoolAPI:
     # OK
     def get_drafts(self):
         session = self.session
+        arcsjs_cookie = self.arcsjs_cookie
+        session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
         url = "https://virgool.io/api/v1.4/posts/drafts"
         response = session.get(url, headers=session.headers, cookies=session.cookies)
         return response
@@ -43,6 +46,8 @@ class VirgoolAPI:
     # OK
     def get_publishments(self):
         session = self.session
+        arcsjs_cookie = self.arcsjs_cookie
+        session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
         url = "https://virgool.io/api/v1.4/posts/published"
         response = session.get(url, headers=session.headers, cookies=session.cookies)
         return response
@@ -50,6 +55,8 @@ class VirgoolAPI:
     # OK
     def fetch_draft_editor_by_hash(self, post_hash: str):
         session = self.session
+        arcsjs_cookie = self.arcsjs_cookie
+        session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
         url = "https://virgool.io/api/v1.4/editor/fetch/d/" + post_hash
         response = session.get(url, headers=session.headers, cookies=session.cookies)
         return response
@@ -57,6 +64,8 @@ class VirgoolAPI:
     # OK
     def fetch_published_editor_by_hash(self, post_hash: str):
         session = self.session
+        arcsjs_cookie = self.arcsjs_cookie
+        session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
         url = "https://virgool.io/api/v1.4/editor/fetch/p/" + post_hash
         response = session.get(url, headers=session.headers, cookies=session.cookies)
         return response
@@ -64,6 +73,8 @@ class VirgoolAPI:
     # OK
     def fetch_post_by_hash(self, post_hash: str):
         session = self.session
+        arcsjs_cookie = self.arcsjs_cookie
+        session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
         url = "https://virgool.io/api/v1.4/post/" + post_hash
         response = session.get(url, headers=session.headers, cookies=session.cookies)
         return response
@@ -83,6 +94,8 @@ class VirgoolAPI:
             "og_description": pyload["description"] if description is None else description,
         }
         session = self.session
+        arcsjs_cookie = self.arcsjs_cookie
+        session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
         url = "https://virgool.io/api/v1.4/editor/draft"
         response = session.post(url, headers=session.headers, cookies=session.cookies, data=data)
         return response, data
@@ -102,6 +115,8 @@ class VirgoolAPI:
             "publication_hash": None,
         }
         session = self.session
+        arcsjs_cookie = self.arcsjs_cookie
+        session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
         url = "https://virgool.io/api/v1.4/editor/publish"
         response = session.post(url, headers=session.headers, cookies=session.cookies, data=data)
         return response
