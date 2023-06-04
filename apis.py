@@ -1,7 +1,8 @@
 from requests import Session
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.common.exceptions import TimeoutException
 
 
 class VirgoolAPI:
@@ -16,13 +17,24 @@ class VirgoolAPI:
         }
 
     def get_arcsjs_cookie(self) -> dict:
-        options = webdriver.ChromeOptions()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--headless")
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        # geckodriver_path = "./geckodriver"
+        # firefox_binary_path = "/home/ubuntu/firefox/firefox-bin"
+        options = Options()
+        # options.headless = True
+        # options.binary_location = firefox_binary_path
+        capabilities = webdriver.DesiredCapabilities.FIREFOX.copy()
+        capabilities["marionette"] = True
+        driver = webdriver.Firefox(
+            # executable_path=geckodriver_path,
+            options=options,
+            capabilities=capabilities,
+        )
         driver.get("https://virgool.io/")
-        cookie = WebDriverWait(driver, timeout=120).until(lambda d: d.get_cookie("__arcsjs"))
-        arcsjs_cookie = {"name": cookie["name"], "value": cookie["value"]}
+        try:
+            cookie = WebDriverWait(driver, timeout=30).until(lambda d: d.get_cookie("__arcsjs"))
+            arcsjs_cookie = {"name": cookie["name"], "value": cookie["value"]}
+        except TimeoutException:
+            arcsjs_cookie = {"name": "__arcsjs", "value": ""}
         driver.quit()
         return arcsjs_cookie
 
