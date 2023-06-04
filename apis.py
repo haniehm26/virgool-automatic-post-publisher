@@ -34,7 +34,7 @@ class VirgoolAPI:
             cookie = WebDriverWait(driver, timeout=30).until(lambda d: d.get_cookie("__arcsjs"))
             arcsjs_cookie = {"name": cookie["name"], "value": cookie["value"]}
         except TimeoutException:
-            arcsjs_cookie = {"name": "__arcsjs", "value": ""}
+            arcsjs_cookie = {"name": "__arcsjs", "value": None}
         driver.quit()
         return arcsjs_cookie
 
