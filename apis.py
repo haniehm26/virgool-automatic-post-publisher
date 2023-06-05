@@ -20,7 +20,7 @@ class VirgoolAPI:
         # geckodriver_path = "./geckodriver"
         # firefox_binary_path = "/home/ubuntu/firefox/firefox-bin"
         options = Options()
-        # options.headless = True
+        options.headless = True
         # options.binary_location = firefox_binary_path
         capabilities = webdriver.DesiredCapabilities.FIREFOX.copy()
         capabilities["marionette"] = True
