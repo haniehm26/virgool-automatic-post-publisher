@@ -105,6 +105,7 @@ class VirgoolAPI:
             "tag": "" if tags is None else tags,
             "og_description": pyload["description"] if description is None else description,
         }
+        print("PYLOAD TAGS", pyload["tags"])
         session = self.session
         arcsjs_cookie = self.arcsjs_cookie
         session.cookies.set(arcsjs_cookie["name"], arcsjs_cookie["value"], domain="virgool.io")
