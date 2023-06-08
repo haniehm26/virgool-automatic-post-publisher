@@ -59,7 +59,7 @@ def run_script(
     response = virgool_api.fetch_post_by_hash(oldest_draft_hash)
     print("FETCH NEW PUBLISHED (OLDEST DRAFT) POST SHORT URL:", response.status_code)
     new_published_short_url = response.json()["post"]["short_url"]
-    print("NEW PUBLISHED (OLDEST DRAFT) POST SHORT URL:", newest_published_short_url)
+    print("NEW PUBLISHED (OLDEST DRAFT) POST SHORT URL:", new_published_short_url)
 
     # TAKE POST OF PREVIOUS SESSION
     response = virgool_api.fetch_published_editor_by_hash(newest_published_hash)
